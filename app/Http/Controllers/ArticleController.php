@@ -6,28 +6,34 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Article;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class ArticleController extends Controller
+class ArticleController extends Controller implements HasMiddleware
 {
-    use AuthorizesRequests;
 
+    public static function middleware():array
+    {
+        return [
+            new Middleware('permission:view-articles', only: ['index']), 
+            new Middleware('permission:edit-articles', only: ['edit']), 
+            new Middleware('permission:create-articles', only: ['create']), 
+            new Middleware('permission:delete-articles', only: ['destroy']), 
+        ];
+    }
     public function index()
     {
-        // $this->authorize('view-article');
         $articles = Article::with('user')->paginate(10);
         return view('articles.index', compact('articles'));
     }
 
     public function create()
     {
-        // $this->authorize('create-article');
         return view('articles.create');
     }
 
     public function store(Request $request)
     {
-        // $this->authorize('create-article');
         $validator = Validator::make($request->all(), [
             'title' => 'required|min:3|max:255',
             'content' => 'required|min:10',
@@ -47,28 +53,22 @@ class ArticleController extends Controller
 
     public function show($id)
     {
-        // $this->authorize('view-article');
         $article = Article::with('user')->findOrFail($id);
         return view('articles.show', compact('article'));
     }
 
     public function edit($id)
     {
-        // $this->authorize('edit-article');
         $article = Article::findOrFail($id);
-        if ($article->user_id !== Auth::id()) {
-            abort(403, 'Unauthorized action.');
-        }
+        // if ($article->user_id !== Auth::id()) {
+        //     abort(403, 'Unauthorized action.');
+        // }
         return view('articles.edit', compact('article'));
     }
 
     public function update(Request $request, $id)
     {
-        // $this->authorize('edit-article');
         $article = Article::findOrFail($id);
-        if ($article->user_id !== Auth::id()) {
-            abort(403, 'Unauthorized action.');
-        }
         $validator = Validator::make($request->all(), [
             'title' => 'required|min:3|max:255',
             'content' => 'required|min:10',
@@ -87,11 +87,10 @@ class ArticleController extends Controller
 
     public function destroy($id)
     {
-        // $this->authorize('delete-article');
         $article = Article::findOrFail($id);
-        if ($article->user_id !== Auth::id()) {
-            abort(403, 'Unauthorized action.');
-        }
+        // if ($article->user_id !== Auth::id()) {
+        //     abort(403, 'Unauthorized action.');
+        // }
         $article->delete();
         return redirect()->route('articles.index')->with('success', 'Article deleted successfully.');
     }

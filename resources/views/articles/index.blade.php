@@ -11,11 +11,11 @@
                 <div class="p-6 text-gray-900">
                     <x-alert></x-alert>
                     <div class="mb-6">
-                        {{-- @can('create-article') --}}
+                        @can('create-articles')
                             <a href="{{ route('articles.create') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                 Create New Article
                             </a>
-                        {{-- @endcan --}}
+                        @endcan
                     </div>
 
                     <div class="overflow-x-auto">
@@ -40,15 +40,15 @@
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $article->created_at->format('d/m/Y H:i') }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                             <div class="flex space-x-2">
-                                                {{-- @can('edit-article') --}}
-                                                    @if (auth()->id() === $article->user_id)
+                                                @can('edit-articles')
+                                                    {{-- @if (auth()->id() === $article->user_id) --}}
                                                         <a href="{{ route('articles.edit', $article->id) }}" class="inline-flex items-center px-3 py-1 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                                             Edit
                                                         </a>
-                                                    @endif
-                                                {{-- @endcan --}}
-                                                {{-- @can('delete-article') --}}
-                                                    @if (auth()->id() === $article->user_id)
+                                                    {{-- @endif --}}
+                                                @endcan
+                                                @can('delete-articles')
+                                                    {{-- @if (auth()->id() === $article->user_id) --}}
                                                         <form action="{{ route('articles.destroy', $article->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this article?');">
                                                             @csrf
                                                             @method('DELETE')
@@ -56,8 +56,8 @@
                                                                 Delete
                                                             </button>
                                                         </form>
-                                                    @endif
-                                                {{-- @endcan --}}
+                                                    {{-- @endif --}}
+                                                @endcan
                                             </div>
                                         </td>
                                     </tr>

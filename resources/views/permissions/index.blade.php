@@ -14,9 +14,11 @@
 
                     <!-- Create Permission Button -->
                     <div class="mb-6">
+                        @can('create-permissions')
                         <a href="{{ route('permissions.create') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                             Create New Permission
-                        </a>
+                        </a>                            
+                        @endcan
                     </div>
 
                     <!-- Permissions Table -->
@@ -52,16 +54,20 @@
                                         </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                                 <div class="flex space-x-2">
+                                                    @can('edit-permissions')
                                                     <a href="{{ route('permissions.edit', $permission->id) }}" class="inline-flex items-center px-3 py-1 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                                         Edit
-                                                    </a>
+                                                    </a>                                                        
+                                                    @endcan
+                                                    @can('delete-permissions')
                                                     <form action="{{ route('permissions.destroy', $permission->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this permission?');">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="submit" class="inline-flex items-center px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
                                                             Delete
                                                         </button>
-                                                    </form>
+                                                    </form>                                                        
+                                                    @endcan
                                                 </div>
                                             </td>
                                     </tr>
