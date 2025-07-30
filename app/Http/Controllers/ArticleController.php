@@ -23,7 +23,7 @@ class ArticleController extends Controller implements HasMiddleware
     }
     public function index()
     {
-        $articles = Article::with('user')->paginate(10);
+        $articles = Article::paginate(10);
         return view('articles.index', compact('articles'));
     }
 
@@ -34,16 +34,18 @@ class ArticleController extends Controller implements HasMiddleware
 
     public function store(Request $request)
     {
+        // dd($request->all());
         $validator = Validator::make($request->all(), [
             'title' => 'required|min:3|max:255',
             'content' => 'required|min:10',
+            'author' => 'required'
         ]);
 
         if ($validator->passes()) {
             Article::create([
                 'title' => $request->title,
                 'content' => $request->content,
-                'user_id' => Auth::id(),
+                'author' => $request->author,
             ]);
             return redirect()->route('articles.index')->with('success', 'Article created successfully.');
         } else {
@@ -53,16 +55,13 @@ class ArticleController extends Controller implements HasMiddleware
 
     public function show($id)
     {
-        $article = Article::with('user')->findOrFail($id);
+        $article = Article::findOrFail($id);
         return view('articles.show', compact('article'));
     }
 
     public function edit($id)
     {
         $article = Article::findOrFail($id);
-        // if ($article->user_id !== Auth::id()) {
-        //     abort(403, 'Unauthorized action.');
-        // }
         return view('articles.edit', compact('article'));
     }
 
@@ -70,14 +69,16 @@ class ArticleController extends Controller implements HasMiddleware
     {
         $article = Article::findOrFail($id);
         $validator = Validator::make($request->all(), [
-            'title' => 'required|min:3|max:255',
+            'title'   => 'required|min:3|max:255',
             'content' => 'required|min:10',
+            'author'  => 'required'
         ]);
 
         if ($validator->passes()) {
             $article->update([
                 'title' => $request->title,
                 'content' => $request->content,
+                'author'  => $request->author
             ]);
             return redirect()->route('articles.index')->with('success', 'Article updated successfully.');
         } else {
@@ -88,9 +89,6 @@ class ArticleController extends Controller implements HasMiddleware
     public function destroy($id)
     {
         $article = Article::findOrFail($id);
-        // if ($article->user_id !== Auth::id()) {
-        //     abort(403, 'Unauthorized action.');
-        // }
         $article->delete();
         return redirect()->route('articles.index')->with('success', 'Article deleted successfully.');
     }

@@ -36,19 +36,16 @@
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                             <a href="{{ route('articles.show', $article->id) }}" class="text-indigo-600 hover:text-indigo-900">{{ $article->title }}</a>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $article->user->name }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $article->author }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $article->created_at->format('d/m/Y H:i') }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                             <div class="flex space-x-2">
                                                 @can('edit-articles')
-                                                    {{-- @if (auth()->id() === $article->user_id) --}}
                                                         <a href="{{ route('articles.edit', $article->id) }}" class="inline-flex items-center px-3 py-1 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                                             Edit
-                                                        </a>
-                                                    {{-- @endif --}}
+                                                        </a>                                                
                                                 @endcan
-                                                @can('delete-articles')
-                                                    {{-- @if (auth()->id() === $article->user_id) --}}
+                                                @can('delete-articles')                                                    
                                                         <form action="{{ route('articles.destroy', $article->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this article?');">
                                                             @csrf
                                                             @method('DELETE')
@@ -56,7 +53,6 @@
                                                                 Delete
                                                             </button>
                                                         </form>
-                                                    {{-- @endif --}}
                                                 @endcan
                                             </div>
                                         </td>

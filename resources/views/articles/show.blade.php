@@ -15,7 +15,7 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     <h3 class="text-2xl font-bold mb-4">{{ $article->title }}</h3>
-                    <p class="text-gray-600 mb-4">By {{ $article->user->name }} on {{ $article->created_at->format('d/m/Y H:i') }}</p>
+                    <p class="text-gray-600 mb-4">By {{ $article->author }} on {{ $article->created_at->format('d/m/Y H:i') }}</p>
                     <div class="prose max-w-none">
                         {{ $article->content }}
                     </div>
